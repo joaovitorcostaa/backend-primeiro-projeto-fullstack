@@ -14,7 +14,7 @@ export class UserController {
             }
 
             const result = await userBusiness.createUser(user)
-            res.status(200).send(result)
+            res.status(200).send({token: result})
         } catch (error) {
             const { statusCode, message } = error
             res.status(statusCode || 400).send({ message });
@@ -32,10 +32,26 @@ export class UserController {
 
             const result = await userBusiness.login(loginData)
 
-            res.status(200).send(result)
+            res.status(200).send({token: result})
         } catch (error) {
             const { statusCode, message } = error
             res.status(statusCode || 400).send({ message });
         }
     }
+
+    public async getUserById(req: Request, res: Response){
+        try {
+           const id = req.params.id as string
+  
+           const result = await userBusiness.getUserById(id)
+  
+           res.status(200).send(result)
+        } catch (error) {
+           const { statusCode, message } = error
+           res.status(statusCode || 400).send({ message });
+        }
+     }
+
 }
+
+export default new UserController()

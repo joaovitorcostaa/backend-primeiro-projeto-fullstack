@@ -10,6 +10,7 @@ export interface LoginInputDTO{
     password: string
 }
 
+
 export class User {
     constructor(
        private id: string,
