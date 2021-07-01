@@ -59,7 +59,9 @@ export class UserBusiness {
                 throw new CustomError(401, "Credenciais inválidas");
              }
 
-             const isPasswordCorrect = await this.hashManager.compare(loginData.password, user.getPassword())
+             const isPasswordCorrect = await this.hashManager.compare(
+                 loginData.password,
+                  user.getPassword())
 
              if (!isPasswordCorrect) {
                 throw new CustomError(401, "Senha incorreta");
@@ -68,6 +70,31 @@ export class UserBusiness {
             const accessToken = this.authenticator.generateToken({id: user.getId()})
 
             return accessToken
+        } catch (error) {
+            throw new CustomError(error.statusCode, error.message)
+        }
+    }
+
+    public async getUserById(id: string) {
+        try {
+            if (!id) {
+                throw new CustomError(422, "Informações faltando");
+             }
+
+             const userData = await this.userDataBase.getUserById(id)
+
+             if (!userData) {
+                throw new CustomError(404, "Esse usuário não existe");
+             }
+
+             const user = {
+                 id: userData.getId(),
+                 name: userData.getName(),
+                 nickname: userData.getNickname(),
+                 email: userData.getEmail()
+             }
+
+             return user
         } catch (error) {
             throw new CustomError(error.statusCode, error.message)
         }
