@@ -2,7 +2,7 @@ import { User } from "../model/User";
 import { BaseDatabase } from "./BaseDataBase";
 
 export class UserDataBase extends BaseDatabase {
-    private static TABLE_NAME = "FIRST_FULLSTACK_USERS"
+    private static TABLE_NAME = "labeimage_users"
 
     private toModel(dbModel?: any): User | undefined {
         return (
@@ -17,7 +17,7 @@ export class UserDataBase extends BaseDatabase {
         );
      }
 
-    public async createUser(
+     public async createUser(
         id: string,
         email: string,
         name: string,
@@ -48,18 +48,20 @@ export class UserDataBase extends BaseDatabase {
             .from(UserDataBase.TABLE_NAME)
             .where({id})
 
-            return result[0];
+            return this.toModel(result[0])
         } catch (error) {
             throw new Error(error.sqlMessage || error.message)
         }
     }
 
-    public async getUserByEmail(email: string): Promise<User | undefined> {
+    public async getUserByEmail(
+        email: string
+        ): Promise<User | undefined> {
         try {
             const result = await this.getConnection()
             .select("*")
             .from(UserDataBase.TABLE_NAME)
-            .where({email})
+            .where({ email })
 
             return this.toModel(result[0])
         } catch (error) {

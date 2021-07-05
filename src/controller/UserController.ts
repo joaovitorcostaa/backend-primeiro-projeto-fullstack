@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import userBusiness from "../business/UserBusiness"
+import { LoginInputDTO, UserInputDTO } from "../model/User"
 
 export class UserController {
     public async signup(req: Request, res: Response) {
@@ -25,7 +26,7 @@ export class UserController {
         try {
             const { email, password } = req.body
 
-            const loginData = {
+            const loginData: LoginInputDTO = {
                 email,
                 password
             }
