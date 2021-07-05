@@ -53,10 +53,10 @@ export class UserBusiness {
                 throw new CustomError(422, "Informações faltando");
              }
     
-             const user = await this.userDataBase.getUserByEmail(loginData.email);
-    
-             if (!user) {
-                throw new CustomError(401, "Credenciais inválidas");
+             const user = await this.userDataBase.getUserByEmail(loginData.email)
+
+             if (!user){
+                throw new CustomError(401, "Usuário não encontrado");
              }
 
              const isPasswordCorrect = await this.hashManager.compare(
