@@ -27,7 +27,7 @@ export class ImageDataBase extends BaseDatabase {
         file: string,
         tags: string,
         collection: string
-    ): Promise<any> {
+    ): Promise<void> {
         try {
             await this.getConnection()
             .insert({            
@@ -45,18 +45,6 @@ export class ImageDataBase extends BaseDatabase {
         }
     }
 
-    public async getAllImage(): Promise<any> {
-        try {
-            const result = await this.getConnection()
-            .select("*")
-            .from(ImageDataBase.TABLE_NAME)
-
-            return result
-        } catch (error) {
-            throw new Error(error.sqlMessage || error.message);
-        }
-    }
-
     public async getImageById(id: string): Promise<Image | undefined> {
         try {
             const result = await this.getConnection()
@@ -65,6 +53,18 @@ export class ImageDataBase extends BaseDatabase {
             .where({id})
 
             return this.toModel(result[0])
+        } catch (error) {
+            throw new Error(error.sqlMessage || error.message);
+        }
+    }
+
+    public async getAllImage(): Promise<Image[]> {
+        try {
+            const result = await this.getConnection()
+            .select("*")
+            .from(ImageDataBase.TABLE_NAME)
+
+            return result
         } catch (error) {
             throw new Error(error.sqlMessage || error.message);
         }

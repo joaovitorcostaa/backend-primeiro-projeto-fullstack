@@ -21,6 +21,9 @@ export class ImageController {
             if (!error.statusCode) {
                 error.statusCode = 400;
               }
+              if (!error.statusCode) {
+                error.statusCode = 400;
+              }
             res.status(error.statusCode).send({ error: error.message });
         }
     }
@@ -50,7 +53,10 @@ export class ImageController {
 
             res.status(201).send(result)
         } catch (error) {
-            
+            if (!error.statusCode) {
+                error.statusCode = 400;
+              }
+            res.status(error.statusCode).send({ error: error.message });
         }
     }
 }

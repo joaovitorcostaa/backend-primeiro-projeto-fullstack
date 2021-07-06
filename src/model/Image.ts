@@ -3,7 +3,7 @@ export class Image {
       private id: string,
       private title: string,
       private author: string,
-      private date: Date,
+      private date: string,
       private file: string,
       private tags: string,
       private collection: string
@@ -34,6 +34,10 @@ export class Image {
   
     getCollection() {
       return this.collection;
+    }
+
+    setDate(newDate: string){
+      this.date = newDate
     }
   }
 

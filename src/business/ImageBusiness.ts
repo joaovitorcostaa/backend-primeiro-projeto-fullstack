@@ -44,8 +44,14 @@ export class ImageBusiness {
             }
 
             const result = await this.imageDataBase.getImageById(id)
-    
-            return result    
+
+        const imageDate = new Date(result!.getDate()).toISOString()
+        const date = imageDate.split("T")
+        const splittedDate = date[0].split("-")
+        const correctedDate = `${splittedDate[2]}/${splittedDate[1]}/${splittedDate[0]}`
+        result && result.setDate(correctedDate!)
+
+        return result    
         } catch (error) {
             throw new CustomError(error.statusCode, error.message)
         }
@@ -63,7 +69,7 @@ export class ImageBusiness {
                 throw new CustomError(400, "Seu token é inválido");
             }
 
-            const result = this.imageDataBase.getAllImage()
+            const result = await this.imageDataBase.getAllImage()
 
             return result    
         } catch (error) {
