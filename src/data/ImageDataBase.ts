@@ -2,7 +2,7 @@ import { Image } from "../model/Image";
 import { BaseDatabase } from "./BaseDataBase";
 
 export class ImageDataBase extends BaseDatabase {
-    private static TABLE_NAME = "labephoto_photos"
+    private static TABLE_NAME = "labeimage_images"
 
     private toModel(dbModel?: any): Image | undefined {
         return (
@@ -20,20 +20,51 @@ export class ImageDataBase extends BaseDatabase {
     }
 
     public async createImage(
-        image: Image
-    ): Promise<void> {
+        id: string,
+        title: string,
+        author: string,
+        date: Date,
+        file: string,
+        tags: string,
+        collection: string
+    ): Promise<any> {
         try {
             await this.getConnection()
             .insert({            
-                id: image.getId(),
-                title: image.getTitle(),
-                author: image.getAuthor(),
-                date: image.getDate(),
-                file: image.getFile(),
-                tags: image.getTags(),
-                collection: image.getCollection()
+                id,
+                title,
+                author,
+                date,
+                file,
+                tags,
+                collection
             })
             .into(ImageDataBase.TABLE_NAME)
+        } catch (error) {
+            throw new Error(error.sqlMessage || error.message);
+        }
+    }
+
+    public async getAllImage(): Promise<any> {
+        try {
+            const result = await this.getConnection()
+            .select("*")
+            .from(ImageDataBase.TABLE_NAME)
+
+            return result
+        } catch (error) {
+            throw new Error(error.sqlMessage || error.message);
+        }
+    }
+
+    public async getImageById(id: string): Promise<Image | undefined> {
+        try {
+            const result = await this.getConnection()
+            .select("*")
+            .from(ImageDataBase.TABLE_NAME)
+            .where({id})
+
+            return this.toModel(result[0])
         } catch (error) {
             throw new Error(error.sqlMessage || error.message);
         }

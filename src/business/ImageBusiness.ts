@@ -2,14 +2,14 @@ import imageDataBase, { ImageDataBase } from "../data/ImageDataBase";
 import authenticator, { Authenticator } from "../services/Authenticator";
 import idGenerator, { IdGenerator } from "../services/IdGenerator";
 import { CustomError } from "../error/CustomError";
-import { Image, ImageInputDTO } from "../model/Image";
+import { ImageInputDTO } from "../model/Image";
 
 export class ImageBusiness {
     constructor(
         private imageDataBase: ImageDataBase,
         private idGenerator: IdGenerator,
         private authenticator: Authenticator
-    ) { }
+    ) {}
     async createImage(image: ImageInputDTO, token: string) {
         try {
             if (!image.title || !image.file || !image.tags || !image.collection) {
@@ -24,15 +24,48 @@ export class ImageBusiness {
 
            const ImageId = this.idGenerator.generate()
 
-            await this.imageDataBase.createImage(new Image(            
-                 ImageId,
-                 image.title,
-                 userData.id,
-                 new Date(),
-                 image.file,
-                 image.tags,
-                 image.collection))
+           await this.imageDataBase.createImage(ImageId, image.title, userData.id, new Date(), image.file, image.tags, image.collection)
 
+        } catch (error) {
+            throw new CustomError(error.statusCode, error.message)
+        }
+    }
+
+    async getImageById(token: string, id: string){
+        try {
+            if(!token){
+                throw new CustomError(400, "Você não está logado");
+            }
+
+            const verifiedToken = this.authenticator.getData(token)
+
+            if(!verifiedToken){
+                throw new CustomError(400, "Seu token é inválido");
+            }
+
+            const result = await this.imageDataBase.getImageById(id)
+    
+            return result    
+        } catch (error) {
+            throw new CustomError(error.statusCode, error.message)
+        }
+    }
+
+    async getAllImage(token: string){
+        try {
+            if(!token){
+                throw new CustomError(400, "Você não está logado");
+            }
+
+            const verifiedToken = this.authenticator.getData(token)
+
+            if(!verifiedToken){
+                throw new CustomError(400, "Seu token é inválido");
+            }
+
+            const result = this.imageDataBase.getAllImage()
+
+            return result    
         } catch (error) {
             throw new CustomError(error.statusCode, error.message)
         }
