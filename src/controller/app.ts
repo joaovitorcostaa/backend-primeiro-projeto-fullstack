@@ -8,7 +8,7 @@ export const app = express()
 
 app.use(express.json())
 
-const PORT = process.env.DB_PORT || 3003;
+const PORT = process.env.PORT || 3003;
 
 const server = app.listen(PORT, () => {
   if (server) {
